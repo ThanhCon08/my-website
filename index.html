@@ -3,43 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sample Form</title>
+    <title>Basic Web</title>
+    <style>
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+    </style>
 </head>
 <body>
-<form>
+<form id="sampleForm" action="/submit" method="POST">
     <!-- Textbox -->
-    <label>Textbox:</label><br>
-    <input type="text" name="textbox"><br><br>
+    <label for="textbox">Textbox:</label><br>
+    <input type="text" id="textbox" name="textbox" required minlength="3" maxlength="50" pattern="[A-Za-z0-9]+" title="Only letters and numbers are allowed"><br>
+    <span class="error" id="textbox-error"></span><br><br>
 
     <!-- Dropdown -->
-    <label>Dropdown Box:</label><br>
-    <select id = "dropdown" name="dropdown">
+    <label for="dropdown">Dropdown Box:</label><br>
+    <select id="dropdown" name="dropdown" required>
+        <option value="" disabled selected>Choose an option</option>
         <option value="option1">Option 1</option>
         <option value="option2">Option 2</option>
         <option value="option3">Option 3</option>
-    </select><br><br>
+    </select><br>
+    <span class="error" id="dropdown-error"></span><br><br>
 
     <!-- Multiselect -->
-    <label>Multiselect:</label><br>
-    <select id="multiselect" name="multiselect" multiple>
+    <label for="multiselect">Multiselect:</label><br>
+    <select id="multiselect" name="multiselect" multiple required>
         <option value="multi1">Multi 1</option>
         <option value="multi2">Multi 2</option>
         <option value="multi3">Multi 3</option>
-    </select><br><br>
+    </select><br>
+    <span class="error" id="multiselect-error"></span><br><br>
 
     <!-- Checkbox -->
     <label>Checkboxes:</label><br>
-    <input type="checkbox" name="checkbox1" value="checkbox1"> Checkbox 1<br>
-    <input type="checkbox" name="checkbox2" value="checkbox2"> Checkbox 2<br>
-    <input type="checkbox" name="checkbox3" value="checkbox3"> Checkbox 3<br><br>
+    <input type="checkbox" id="checkbox1" name="checkbox1" value="checkbox1">
+    <label for="checkbox1">Checkbox 1</label><br>
+    <input type="checkbox" id="checkbox2" name="checkbox2" value="checkbox2">
+    <label for="checkbox2">Checkbox 2</label><br>
+    <input type="checkbox" id="checkbox3" name="checkbox3" value="checkbox3">
+    <label for="checkbox3">Checkbox 3</label><br>
+    <span class="error" id="checkbox-error"></span><br><br>
 
     <!-- Radio Button -->
     <label>Radio:</label><br>
-    <input type="radio" name="radio" value="male"> Male<br>
-    <input type="radio" name="radio" value="female"> Female<br><br>
+    <input type="radio" id="male" name="radio" value="male" required>
+    <label for="male">Male</label><br>
+    <input type="radio" id="female" name="radio" value="female">
+    <label for="female">Female</label><br>
+    <span class="error" id="radio-error"></span><br><br>
 
     <!-- Submit Button -->
     <input type="submit" value="SUBMIT">
 </form>
+
+<script>
+    // JavaScript to enforce at least one checkbox selected
+    document.getElementById("sampleForm").addEventListener("submit", function(event) {
+        const checkboxes = document.querySelectorAll('input[name^="checkbox"]');
+        const checked = Array.from(checkboxes).some(cb => cb.checked);
+        const checkboxError = document.getElementById("checkbox-error");
+
+        if (!checked) {
+            event.preventDefault();
+            checkboxError.textContent = "Please select at least one checkbox.";
+        } else {
+            checkboxError.textContent = "";
+        }
+    });
+
+    // Optional: Clear error messages when user corrects input
+    document.getElementById("textbox").addEventListener("input", function() {
+        document.getElementById("textbox-error").textContent = "";
+    });
+    document.getElementById("dropdown").addEventListener("change", function() {
+        document.getElementById("dropdown-error").textContent = "";
+    });
+    document.getElementById("multiselect").addEventListener("change", function() {
+        document.getElementById("multiselect-error").textContent = "";
+    });
+    document.querySelectorAll('input[name="radio"]').forEach(radio => {
+        radio.addEventListener("change", function() {
+            document.getElementById("radio-error").textContent = "";
+        });
+    });
+</script>
 </body>
 </html>
